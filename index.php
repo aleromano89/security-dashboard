@@ -12,6 +12,7 @@
 
 <body>
 
+<h1>security dashboard</h1>
 <div class="container" >
 	<div class="chart-container" style="width:40%">
 		<canvas id="myChart" width="400" height="400"></canvas>
