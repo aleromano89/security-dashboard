@@ -18,7 +18,7 @@
 	</div>
 
 	<button class="btn btn-primary btn-chart" data-type='horizontalBar'>Barre</button>
-	<button class="btn btn-primary btn-chart" data-type='pie'>Torta</button>
+	<button class="btn btn-primary btn-chart" data-type='pie' disabled >Torta</button>
 
 <table class="table" id="results">
 	<thead>
@@ -29,12 +29,15 @@
 
 		$file = fopen('result.csv', 'r');
 
-		$i=1;
+		$count_rows=1;
 		$count_valid_https = 0;
 		while ( $row = fgetcsv($file, 2048, ",")) {
+			$count_rows++;
 
 			echo 	"<tr>";
 			foreach ($row as $key => $field ) {
+
+				
 				switch ($field) {
 					case 'True':
 						$valore = 'Si';
@@ -140,11 +143,25 @@ function updateChart( oTable, type_chart = 0) {
 		$('#myChart').remove();
 
 		$('.chart-container').append('<canvas id="myChart" width="400" height="400"></canvas>');
-		
+			
+
 		createChart(new_data, type_chart);
 
 	}
 	else {
+
+			console.log(window.myChart);
+
+
+		if (window.myChart.config.type =='horizontalBar') {
+			$('#myChart').remove();
+			$('.chart-container').append('<canvas id="myChart" width="400" height="400"></canvas>');
+
+			createChart(new_data, 'horizontalBar');
+			return false;
+		}
+
+
 		window.myChart.data.datasets[0].data = new_data;
 		window.myChart.update();
 	}
@@ -152,53 +169,48 @@ function updateChart( oTable, type_chart = 0) {
 
 }
 
-function changeChartType() {
-
-	var current_type = window.myChart.type;
-
-	
-	window.myChart.type = new_type;
-	window.myChart.update();
-}
-
 
 
 var count_valid_https = <?php echo $count_valid_https; ?>;
 
-var count_not_valid_https = 99 -parseInt(count_valid_https);
+var count_not_valid_https = parseInt(<?php echo $count_rows?>) -count_valid_https;
 
 var arr_data = [count_valid_https, count_not_valid_https];
 
+window.myChart = null;
+
+
 function createChart( arr_data, type_chart) {
+
 	var ctx = document.getElementById("myChart");
 
 	var param_options, stepSize;
 
-var count_valid_https = arr_data[0];
-var count_not_valid_https = arr_data[1];
+	var count_valid_https = arr_data[0];
+	var count_not_valid_https = arr_data[1];
 
-var tot_values = parseInt( count_valid_https + count_not_valid_https);
+	var tot_values = parseInt( count_valid_https + count_not_valid_https);
 
-stepSize = (tot_values> 30) ? 10 : 1;
+	stepSize = (tot_values> 30) ? 10 : 1;
 
-if ( type_chart == 'horizontalBar') {
+	if ( type_chart == 'horizontalBar') {
 
-	param_options ={
+		param_options ={
 			title: {
-	            display: true,
-	            text: 'HTTPS valido'
-	        	},
-		scales: {
-        xAxes: [{
-            ticks: {
-                max: tot_values,
-                min: 0,
-                stepSize: stepSize
-            }
-        }]
-    	}
-    }
-} else {
+		            display: true,
+		            text: 'HTTPS valido'
+		    },
+			scales: {
+		        xAxes: [{
+		            ticks: {
+		                max: tot_values,
+			            min: 0,
+			            stepSize: stepSize
+		            }
+		        }]
+	    	}
+	    }
+	} else {
 		param_options =	{
 			title: {
 	            display: true,
