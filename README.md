@@ -15,7 +15,7 @@ A dashboard that shows the status of security features on .gov.it websites
     ```bash
     ./scan domains.csv --scan=pshtt
     ```
-4. Copy your result file into web server root. The output csv should have the following columns in order to be supported: Domain,Base Domain,Live,Redirect,Valid HTTPS,Domain Enforces HTTPS
+4. Copy your result.csv file into web server root. The output csv should have the following columns in order to be supported: Domain,Base Domain,Live,Redirect,Valid HTTPS,Domain Enforces HTTPS. You should also delete header row from this file before using dashboard.
 5. Open the dashboard in your web browser Ex. http://localhost/security-dashboard/
 
 # Credits
